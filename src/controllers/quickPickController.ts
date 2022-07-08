@@ -26,4 +26,19 @@ export class QuickPickController {
         window.showInformationMessage(`Got: ${result}`);
     }
 
+    public async createQuickPick() {
+        // const quickPick = window.createQuickPick();
+		// quickPick.items = Object.keys(options).map(label => ({ label }));
+		// quickPick.onDidChangeSelection(selection => {
+		// 	if (selection[0]) {
+		// 		options[selection[0].label](context)
+		// 			.catch(console.error);
+		// 	}
+		// });
+		// quickPick.onDidHide(() => quickPick.dispose());
+		// quickPick.show();
+    }
+
+    public dispose(){}
+
 }
