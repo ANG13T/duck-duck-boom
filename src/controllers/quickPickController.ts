@@ -40,8 +40,9 @@ export class QuickPickController {
 		quickPick.items = Object.keys(options).map(label => ({ label }));
 		quickPick.onDidChangeSelection(selection => {
 			if (selection[0]) {
-				options[selection[0].label](context)
-					.catch(console.error);
+				// options[selection[0].label](context)
+				// 	.catch(console.error);
+                console.log("hello")
 			}
 		});
 		quickPick.onDidHide(() => quickPick.dispose());
