@@ -1,7 +1,10 @@
-import { window } from 'vscode';
+import { ExtensionContext, window } from 'vscode';
+import { showInputBox, showQuickPick } from '../components/QuickPick/basicInput';
+import { multiStepInput } from '../components/QuickPick/multiStepInput';
+import { quickOpen } from '../components/QuickPick/quickOpen';
 
 export class QuickPickController {
-    public constructor() {
+    public constructor(context: ExtensionContext) {
     }
 
     public async showQuickPick() {
@@ -27,16 +30,22 @@ export class QuickPickController {
     }
 
     public async createQuickPick() {
-        // const quickPick = window.createQuickPick();
-		// quickPick.items = Object.keys(options).map(label => ({ label }));
-		// quickPick.onDidChangeSelection(selection => {
-		// 	if (selection[0]) {
-		// 		options[selection[0].label](context)
-		// 			.catch(console.error);
-		// 	}
-		// });
-		// quickPick.onDidHide(() => quickPick.dispose());
-		// quickPick.show();
+        const options: { [key: string]: (context: ExtensionContext) => Promise<void> } = {
+			showQuickPick,
+			showInputBox,
+			multiStepInput,
+			quickOpen,
+		};
+		const quickPick = window.createQuickPick();
+		quickPick.items = Object.keys(options).map(label => ({ label }));
+		quickPick.onDidChangeSelection(selection => {
+			if (selection[0]) {
+				options[selection[0].label](context)
+					.catch(console.error);
+			}
+		});
+		quickPick.onDidHide(() => quickPick.dispose());
+		quickPick.show();
     }
 
     public dispose(){}

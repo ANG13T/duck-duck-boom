@@ -18,6 +18,10 @@
       {
         "command": "duck-duck-boom.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "duck-duck-boom.quickInput",
+        "title": "Quick Input"
       }
     ]
   },
