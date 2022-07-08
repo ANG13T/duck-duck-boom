@@ -29,14 +29,10 @@ export function deactivate() {}
 
 
 async function createAPICall(): Promise<void> {
-	console.log("hello~~~~")
-	fetch('https://api.github.com/users/github').then((result) => {
-		console.log(result);
-	})
+	const response = await fetch('https://api.github.com/users/github');
+	const data = await response.json();
+
+	console.log(data);
 
 	return;
-	
-	//const data = await response.json();
-	
-	//console.log(data);
 }
