@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import fetch from 'node-fetch';
+import { showInputBox } from './components/inputs';
 
 export function activate(context: vscode.ExtensionContext) {
 
