@@ -14,6 +14,17 @@ class PayloadCategoryItem implements QuickPickItem {
 	}
 }
 
+type PayloadResponse = {
+    name: string;
+    path: string;
+    sha: string;
+    size: number;
+    url: string;
+    html_url: string;
+    git_url: string;
+    type: string;
+}
+
 export class QuickPickController {
     public constructor(context: ExtensionContext) {
     }
@@ -27,7 +38,7 @@ export class QuickPickController {
 
         quickPick.onDidChangeSelection(selection => {
            if(selection[0] && selection[0] instanceof PayloadCategoryItem) {
-            this.showPayloadsForCategory(selection[0]);
+            this.retrievePayloadsForCategory(selection[0]);
            }
         })
 
@@ -35,14 +46,21 @@ export class QuickPickController {
 		quickPick.show();     
     }
 
-    private async showPayloadsForCategory(category: PayloadCategoryItem) {
+    private async retrievePayloadsForCategory(category: PayloadCategoryItem) {
         const files = ['credentials', 'execution', 'exfiltration', 'general', 'incident_response', 'mobile', 'phishing', 'prank', 'recon', 'remote_access'];
         const selectedFile = files[category.index];
         const response = await fetch(`https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/payloads/library/${selectedFile}`);
-	    const payloads = await response.json();
-        console.log(payloads)
+	    const payloads = await response.json() as PayloadResponse[];
+        const filteredPayloads = payloads.filter(obj => {
+            return obj.name != 'placeholder';
+        })
+        this.showPayloadsForCategory(filteredPayloads);
         window.showInformationMessage(`Chose ${category} category!`);
 
+    }
+
+    public async showPayloadsForCategory(payloads: PayloadResponse[]) {
+        console.log(payloads)
     }
 
     public async createQuickPick(context: ExtensionContext) {
