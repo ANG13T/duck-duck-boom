@@ -4,15 +4,14 @@ import { QuickPickController } from './controllers/quickPickController';
 
 export function activate(context: vscode.ExtensionContext) {
 
-	const quickPickController = new QuickPickController(context);
-
 	let disposable = vscode.commands.registerCommand('duck-duck-boom.helloWorld', async() => {
 		vscode.window.showInformationMessage('Hello World from Duck Duck Boom!');
 		let results = await createAPICall();
 	});
 
-	context.subscriptions.push(quickPickController);
-	context.subscriptions.push(vscode.commands.registerCommand('duck-duck-boom.quickInput', () => quickPickController.showQuickPick()))
+	context.subscriptions.push(vscode.commands.registerCommand('duck-duck-boom.quickInput', () => {
+		
+	})
 	context.subscriptions.push(disposable);
 }
 
