@@ -29,25 +29,24 @@ export class QuickPickController {
         window.showInformationMessage(`Got: ${result}`);
     }
 
-    public async createQuickPick() {
-        console.log("hello")
-        // const options: { [key: string]: (context: ExtensionContext) => Promise<void> } = {
-		// 	showQuickPick,
-		// 	showInputBox,
-		// 	multiStepInput,
-		// 	quickOpen,
-		// };
-		// const quickPick = window.createQuickPick();
-		// quickPick.items = Object.keys(options).map(label => ({ label }));
-		// quickPick.onDidChangeSelection(selection => {
-		// 	if (selection[0]) {
-		// 		// options[selection[0].label](context)
-		// 		// 	.catch(console.error);
-        //         console.log("hello")
-		// 	}
-		// });
-		// quickPick.onDidHide(() => quickPick.dispose());
-		// quickPick.show();
+    public async createQuickPick(context: ExtensionContext) {
+        const options: { [key: string]: (context: ExtensionContext) => Promise<void> } = {
+			showQuickPick,
+			showInputBox,
+			multiStepInput,
+			quickOpen,
+		};
+		const quickPick = window.createQuickPick();
+		quickPick.items = Object.keys(options).map(label => ({ label }));
+		quickPick.onDidChangeSelection(selection => {
+			if (selection[0]) {
+				options[selection[0].label](context)
+					.catch(console.error);
+                console.log("hello")
+			}
+		});
+		quickPick.onDidHide(() => quickPick.dispose());
+		quickPick.show();
     }
 
     public dispose(){}
