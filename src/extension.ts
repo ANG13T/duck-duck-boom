@@ -12,7 +12,7 @@ export function activate(context: ExtensionContext) {
 	});
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
-		quickPickController.createQuickPick(context);
+		quickPickController.showQuickPick();
 	}));
 
 	context.subscriptions.push(disposable);

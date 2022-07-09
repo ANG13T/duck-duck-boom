@@ -1,4 +1,4 @@
-import { ExtensionContext, window } from 'vscode';
+import { ExtensionContext, QuickPickItemKind, window, QuickPickItem } from 'vscode';
 import { showInputBox, showQuickPick } from '../components/QuickPick/basicInput';
 import { multiStepInput } from '../components/QuickPick/multiStepInput';
 import { quickOpen } from '../components/QuickPick/quickOpen';
@@ -8,12 +8,14 @@ export class QuickPickController {
     }
 
     public async showQuickPick() {
-        let i = 0;
-        const result = await window.showQuickPick(['eins', 'zwei', 'drei'], {
-            placeHolder: 'eins, zwei or drei',
-            onDidSelectItem: item => window.showInformationMessage(`Focus ${++i}: ${item}`)
+        await window.showQuickPick(['Credentials', 'Execution', 'Exfiltration', 'General', 'Incident Response', 'Mobile', 'Phishing', 'Prank', 'Reconnaissance', 'Remote Access'], {
+            placeHolder: 'Choose Payload Category',
+            onDidSelectItem: item => this.showPayloadForCategory(item)
         });
-        window.showInformationMessage(`Got: ${result}`);
+    }
+
+    private async showPayloadForCategory(category: string | QuickPickItem) {
+        window.showInformationMessage(`Chose ${category} category!`)
     }
 
     public async showInputBox() {
@@ -37,12 +39,12 @@ export class QuickPickController {
 			quickOpen,
 		};
 		const quickPick = window.createQuickPick();
-		quickPick.items = Object.keys(options).map(label => ({ label }));
+		//quickPick.items = Object.keys(options).map(label => ({ label }));
 		quickPick.onDidChangeSelection(selection => {
 			if (selection[0]) {
+                console.log(selection[0])
 				options[selection[0].label](context)
 					.catch(console.error);
-                console.log("hello")
 			}
 		});
 		quickPick.onDidHide(() => quickPick.dispose());
