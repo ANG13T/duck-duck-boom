@@ -12,25 +12,28 @@ export function activate(context: ExtensionContext) {
 		let results = await createAPICall();
 	});
 
+	let disposable2 = commands.registerCommand('duck-duck-boom.quickInput', async () => {
+		// const options: { [key: string]: (context: ExtensionContext) => Promise<void> } = {
+		// 	showQuickPick,
+		// 	showInputBox,
+		// 	multiStepInput,
+		// 	quickOpen,
+		// };
+		// const quickPick = window.createQuickPick();
+		// quickPick.items = Object.keys(options).map(label => ({ label }));
+		// quickPick.onDidChangeSelection(selection => {
+		// 	if (selection[0]) {
+		// 		options[selection[0].label](context)
+		// 			.catch(console.error);
+		// 	}
+		// });
+		// quickPick.onDidHide(() => quickPick.dispose());
+		// quickPick.show();
+		console.log("hello")
+	});
 
-	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
-		const options: { [key: string]: (context: ExtensionContext) => Promise<void> } = {
-			showQuickPick,
-			showInputBox,
-			multiStepInput,
-			quickOpen,
-		};
-		const quickPick = window.createQuickPick();
-		quickPick.items = Object.keys(options).map(label => ({ label }));
-		quickPick.onDidChangeSelection(selection => {
-			if (selection[0]) {
-				options[selection[0].label](context)
-					.catch(console.error);
-			}
-		});
-		quickPick.onDidHide(() => quickPick.dispose());
-		quickPick.show();
-	}));
+
+	context.subscriptions.push(disposable2);
 
 	context.subscriptions.push(disposable);
 }
