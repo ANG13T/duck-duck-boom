@@ -14,6 +14,18 @@ class PayloadCategoryItem implements QuickPickItem {
 	}
 }
 
+class PayloadItem implements QuickPickItem {
+    label: string;
+	index: number;
+    response: PayloadResponse;
+
+    constructor(public itemLabel: string, public itemIndex: number, public itemResponse: PayloadResponse) {
+		this.label = itemLabel;
+        this.index = itemIndex;
+        this.response = itemResponse;
+	}
+}
+
 type PayloadResponse = {
     name: string;
     path: string;
@@ -56,11 +68,25 @@ export class QuickPickController {
         })
         this.showPayloadsForCategory(filteredPayloads);
         window.showInformationMessage(`Chose ${category} category!`);
-
     }
 
     public async showPayloadsForCategory(payloads: PayloadResponse[]) {
-        console.log(payloads)
+        console.log(payloads);
+        const payloadItems : PayloadItem[] = payloads.map((payload, index) => {
+           return new PayloadItem(payload.name, index, payload);
+        })
+        const quickPick = window.createQuickPick();
+        quickPick.items = payloadItems;
+        quickPick.placeholder = "Choose Payload";
+
+        quickPick.onDidChangeSelection(selection => {
+            if(selection[0] && selection[0] instanceof PayloadItem) {
+                console.log("payload is", selection[0]);
+            }
+        })
+
+        quickPick.onDidHide(() => quickPick.dispose());
+		quickPick.show();   
     }
 
     public async createQuickPick(context: ExtensionContext) {
