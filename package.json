@@ -26,6 +26,9 @@
       }
     ]
   },
+  "extensionDependencies": [
+    "mindaro-dev.file-downloader"
+  ],
   "scripts": {
     "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
@@ -49,6 +52,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "@microsoft/vscode-file-downloader-api": "^1.0.1",
     "node-fetch": "^2.6.7"
   }
 }

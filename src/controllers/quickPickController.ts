@@ -2,6 +2,7 @@ import { ExtensionContext, QuickPickItemKind, window, QuickPickItem, workspace, 
 import { showInputBox, showQuickPick } from '../components/QuickPick/basicInput';
 import { multiStepInput } from '../components/QuickPick/multiStepInput';
 import { quickOpen } from '../components/QuickPick/quickOpen';
+import { getApi, FileDownloader } from "@microsoft/vscode-file-downloader-api";
 import fetch from 'node-fetch';
 
 class PayloadCategoryItem implements QuickPickItem {
@@ -38,8 +39,10 @@ type PayloadResponse = {
 }
 
 export class QuickPickController {
+    private extensionContent: ExtensionContext;
     public constructor(context: ExtensionContext) {
-    }
+        this.extensionContent = context;
+    }   
 
     public async showQuickPick() {
         const categories: PayloadCategoryItem[] = [new PayloadCategoryItem('Credentials', 0), new PayloadCategoryItem('Execution', 1), new PayloadCategoryItem('Exfiltration', 2), new PayloadCategoryItem('General', 3), new PayloadCategoryItem('Incident Response', 4), new PayloadCategoryItem('Mobile', 5), new PayloadCategoryItem('Phishing', 6), new PayloadCategoryItem('Prank', 7), new PayloadCategoryItem('Reconnaissance', 8), new PayloadCategoryItem('Remote Access', 9)]
@@ -108,6 +111,13 @@ export class QuickPickController {
         const response2 = await fetch(updatedFinalURL);
 	    const payloads2 = await response2.json();
         console.log("jackpot", payloads2.download_url);
+        const fileDownloader: FileDownloader = await getApi();
+        const file: Uri = await fileDownloader.downloadFile(
+            Uri.parse(payloads2.download_url),
+            'payload.txt',
+            this.extensionContent
+        );
+
         workspace.updateWorkspaceFolders(0,undefined,{uri: payloadURL, name:payload.itemLabel});
     }
 

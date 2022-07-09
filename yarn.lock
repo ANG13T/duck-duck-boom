@@ -31,6 +31,11 @@
   "resolved" "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   "version" "1.2.1"
 
+"@microsoft/vscode-file-downloader-api@^1.0.1":
+  "integrity" "sha512-cO9n/IpTMbXizz5YcEkiuRyX5r66SBY/3LnrlroyXbQXrgDdaKecfV3n4viTcvp9O//QF2AxcBfDZex2d4VSTg=="
+  "resolved" "https://registry.npmjs.org/@microsoft/vscode-file-downloader-api/-/vscode-file-downloader-api-1.0.1.tgz"
+  "version" "1.0.1"
+
 "@nodelib/fs.scandir@2.1.5":
   "integrity" "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="
   "resolved" "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
