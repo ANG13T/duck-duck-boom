@@ -1,4 +1,4 @@
-import { ExtensionContext, QuickPickItemKind, window, QuickPickItem, workspace, commands, Uri } from 'vscode';
+import { ExtensionContext, QuickPickItemKind, window, QuickPickItem, workspace, commands, Uri,ProgressLocation } from 'vscode';
 import { showInputBox, showQuickPick } from '../components/QuickPick/basicInput';
 import { multiStepInput } from '../components/QuickPick/multiStepInput';
 import { quickOpen } from '../components/QuickPick/quickOpen';
@@ -122,5 +122,20 @@ export class QuickPickController {
     }
 
     public dispose(){}
+
+    public progressLoader(){
+        window.withProgress({
+            location: ProgressLocation.Window,
+            cancellable: false,
+            title: 'Loading customers'
+        }, async (progress) => {
+            
+            progress.report({  increment: 0 });
+        
+            await Promise.resolve();
+        
+            progress.report({ increment: 100 });
+        });
+    }
 
 }
