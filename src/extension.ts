@@ -1,17 +1,37 @@
-import * as vscode from 'vscode';
+import {commands, ExtensionContext, window} from 'vscode';
 import fetch from 'node-fetch';
 import { QuickPickController } from './controllers/quickPickController';
+import { showInputBox, showQuickPick } from './components/QuickPick/basicInput';
+import { multiStepInput } from './components/QuickPick/multiStepInput';
+import { quickOpen } from './components/QuickPick/quickOpen';
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext) {
 
-	let disposable = vscode.commands.registerCommand('duck-duck-boom.helloWorld', async() => {
-		vscode.window.showInformationMessage('Hello World from Duck Duck Boom!');
+	let disposable = commands.registerCommand('duck-duck-boom.helloWorld', async() => {
+		window.showInformationMessage('Hello World from Duck Duck Boom!');
 		let results = await createAPICall();
 	});
 
-	context.subscriptions.push(vscode.commands.registerCommand('duck-duck-boom.quickInput', () => {
-		
-	})
+
+	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
+		const options: { [key: string]: (context: ExtensionContext) => Promise<void> } = {
+			showQuickPick,
+			showInputBox,
+			multiStepInput,
+			quickOpen,
+		};
+		const quickPick = window.createQuickPick();
+		quickPick.items = Object.keys(options).map(label => ({ label }));
+		quickPick.onDidChangeSelection(selection => {
+			if (selection[0]) {
+				options[selection[0].label](context)
+					.catch(console.error);
+			}
+		});
+		quickPick.onDidHide(() => quickPick.dispose());
+		quickPick.show();
+	}));
+
 	context.subscriptions.push(disposable);
 }
 
