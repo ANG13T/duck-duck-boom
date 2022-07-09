@@ -101,10 +101,13 @@ export class QuickPickController {
         // const folderUri = Uri.file(`/${payload.itemLabel}`);
         // commands.executeCommand('vscode.openFolder', folderUri);
         let payloadURL = await Uri.parse(payloads[0].url);
-        console.log("calling", payloads[0].url)
-        const response2 = await fetch(payloads[0].url);
+        console.log("calling", payloads[0]);
+        
+        let updatedFinalURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloads[0].path}`;
+        console.log("choosing 3", updatedFinalURL)
+        const response2 = await fetch(updatedFinalURL);
 	    const payloads2 = await response2.json();
-        console.log("jackpot", payloads2)
+        console.log("jackpot", payloads2.download_url);
         workspace.updateWorkspaceFolders(0,undefined,{uri: payloadURL, name:payload.itemLabel});
     }
 
