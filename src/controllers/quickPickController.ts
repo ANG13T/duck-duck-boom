@@ -1,4 +1,4 @@
-import { ExtensionContext, QuickPickItemKind, window, QuickPickItem } from 'vscode';
+import { ExtensionContext, QuickPickItemKind, window, QuickPickItem, workspace, commands, Uri } from 'vscode';
 import { showInputBox, showQuickPick } from '../components/QuickPick/basicInput';
 import { multiStepInput } from '../components/QuickPick/multiStepInput';
 import { quickOpen } from '../components/QuickPick/quickOpen';
@@ -67,7 +67,6 @@ export class QuickPickController {
             return obj.name != 'placeholder';
         })
         this.showPayloadsForCategory(filteredPayloads);
-        window.showInformationMessage(`Chose ${category} category!`);
     }
 
     public async showPayloadsForCategory(payloads: PayloadResponse[]) {
@@ -81,7 +80,9 @@ export class QuickPickController {
 
         quickPick.onDidChangeSelection(selection => {
             if(selection[0] && selection[0] instanceof PayloadItem) {
+                window.showInformationMessage(`Chose ${selection[0].itemLabel} payload!`);
                 console.log("payload is", selection[0]);
+                this.choosePayload(selection[0]);
             }
         })
 
@@ -89,24 +90,22 @@ export class QuickPickController {
 		quickPick.show();   
     }
 
-    public async createQuickPick(context: ExtensionContext) {
-        const options: { [key: string]: (context: ExtensionContext) => Promise<void> } = {
-			showQuickPick,
-			showInputBox,
-			multiStepInput,
-			quickOpen,
-		};
-		const quickPick = window.createQuickPick();
-		//quickPick.items = Object.keys(options).map(label => ({ label }));
-		quickPick.onDidChangeSelection(selection => {
-			if (selection[0]) {
-                console.log(selection[0])
-				options[selection[0].label](context)
-					.catch(console.error);
-			}
-		});
-		quickPick.onDidHide(() => quickPick.dispose());
-		quickPick.show();
+    public async choosePayload(payload: PayloadItem) {
+        console.log("choosing", payload.itemResponse.html_url)
+        const path = payload.itemResponse.html_url.split('https://github.com/hak5/usbrubberducky-payloads/tree/master/')[1];
+        console.log("choosing 2", path)
+        let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${path}`;
+        const response = await fetch(updatedURL);
+	    const payloads = await response.json();
+        console.log("new", payloads[0].content)
+        // const folderUri = Uri.file(`/${payload.itemLabel}`);
+        // commands.executeCommand('vscode.openFolder', folderUri);
+        let payloadURL = await Uri.parse(payloads[0].url);
+        console.log("calling", payloads[0].url)
+        const response2 = await fetch(payloads[0].url);
+	    const payloads2 = await response2.json();
+        console.log("jackpot", payloads2)
+        workspace.updateWorkspaceFolders(0,undefined,{uri: payloadURL, name:payload.itemLabel});
     }
 
     public dispose(){}
