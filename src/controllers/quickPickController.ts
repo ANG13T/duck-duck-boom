@@ -5,6 +5,7 @@ import { quickOpen } from '../components/QuickPick/quickOpen';
 import { getApi, FileDownloader } from "@microsoft/vscode-file-downloader-api";
 const fs = require('fs');
 const path = require('path');
+const Readable = require('stream').Readable;
 
 import fetch from 'node-fetch';
 
@@ -98,19 +99,12 @@ export class QuickPickController {
     }
 
     public async choosePayload(payload: PayloadItem) {
-        console.log("choosing", payload.itemResponse.html_url)
         const payloadPath = payload.itemResponse.html_url.split('https://github.com/hak5/usbrubberducky-payloads/tree/master/')[1];
-        console.log("choosing 2", payloadPath)
         let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadPath}`;
         const response = await fetch(updatedURL);
         const payloads = await response.json();
-        console.log("new", payloads[0].content)
-        // const folderUri = Uri.file(`/${payload.itemLabel}`);
-        // commands.executeCommand('vscode.openFolder', folderUri);
-        console.log("calling", payloads[0]);
 
         let updatedFinalURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloads[0].path}`;
-        console.log("choosing 3", updatedFinalURL)
         const response2 = await fetch(updatedFinalURL);
         const payloads2 = await response2.json();
         console.log("jackpot", payloads2.download_url);
@@ -126,7 +120,6 @@ export class QuickPickController {
             
 
         if (!fs.existsSync(`./${payload.itemLabel}`)) {
-            // fs.mkdir(`./${payload.itemLabel}`);
             await fs.mkdir(folderPath, (err: any) => {
                 console.log("error", err)
             });
@@ -134,30 +127,23 @@ export class QuickPickController {
             window.showErrorMessage('Payload already imported!')
         }
 
-        console.log("start file creation", folderPath)
+        console.log("start file creation", folderPath, payloads2.name)
 
-        const htmlContent = `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-          <title>Document</title>
-          <link rel="stylesheet" href="app.css" />
-        </head>
-        <body>
-          <script src="app.js"></script>
-        </body>
-        </html>`;
+        const fileBuffer = Buffer.from(payloads2.content, 'base64')
 
-        fs.writeFile(path.join(folderPath, 'index.html'), htmlContent, (err: any) => {
+        var stream = new Readable()
+
+        stream.push(fileBuffer)   
+        stream.push(null)
+
+        stream.pipe(fs.createWriteStream(path.join(folderPath, payloads2.name)), (err: any) => {
             if (err) {
                 return window.showErrorMessage(
-                    'Failed to create boilerplate file!'
+                    'Failed to import payload!'
                 );
             }
-            window.showInformationMessage('Created boilerplate files');
         });
+
     }
 
     public dispose() { }
@@ -166,7 +152,7 @@ export class QuickPickController {
         window.withProgress({
             location: ProgressLocation.Window,
             cancellable: false,
-            title: 'Loading customers'
+            title: 'Loading payload'
         }, async (progress) => {
 
             progress.report({ increment: 0 });
