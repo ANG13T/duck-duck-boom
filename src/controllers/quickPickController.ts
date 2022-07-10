@@ -1,4 +1,4 @@
-import { ExtensionContext, QuickPickItemKind, window, QuickPickItem, workspace, commands, Uri,ProgressLocation } from 'vscode';
+import { ExtensionContext, QuickPickItemKind, window, QuickPickItem, workspace, commands, Uri,ProgressLocation, FileSystemProvider } from 'vscode';
 import { showInputBox, showQuickPick } from '../components/QuickPick/basicInput';
 import { multiStepInput } from '../components/QuickPick/multiStepInput';
 import { quickOpen } from '../components/QuickPick/quickOpen';
@@ -103,7 +103,6 @@ export class QuickPickController {
         console.log("new", payloads[0].content)
         // const folderUri = Uri.file(`/${payload.itemLabel}`);
         // commands.executeCommand('vscode.openFolder', folderUri);
-        let payloadURL = await Uri.parse(payloads[0].url);
         console.log("calling", payloads[0]);
         
         let updatedFinalURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloads[0].path}`;
@@ -111,14 +110,10 @@ export class QuickPickController {
         const response2 = await fetch(updatedFinalURL);
 	    const payloads2 = await response2.json();
         console.log("jackpot", payloads2.download_url);
-        const fileDownloader: FileDownloader = await getApi();
-        const file: Uri = await fileDownloader.downloadFile(
-            Uri.parse(payloads2.download_url),
-            'payload.txt',
-            this.extensionContent
-        );
+        console.log("jackpot2", payloads2.content);
 
-        workspace.updateWorkspaceFolders(0,undefined,{uri: payloadURL, name:payload.itemLabel});
+        // workspace.updateWorkspaceFolders(0,undefined,{uri: ..., name:payload.itemLabel});
+        let fsp = new FileSystemProvider();
     }
 
     public dispose(){}
