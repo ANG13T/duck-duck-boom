@@ -42,7 +42,7 @@ export class QuickPickController {
     private extensionContent: ExtensionContext;
 
     public constructor(context: ExtensionContext) {
-        this.extensionContent = context;        
+        this.extensionContent = context;
     }
 
     public async showQuickPick() {
@@ -65,11 +65,11 @@ export class QuickPickController {
     private async retrievePayloadsForCategory(category: PayloadCategoryItem) {
         const files = ['credentials', 'execution', 'exfiltration', 'general', 'incident_response', 'mobile', 'phishing', 'prank', 'recon', 'remote_access'];
         let selectedFile = files[category.index];
-        if (selectedFile == 'mobile') {            
+        if (selectedFile == 'mobile') {
             let chosenMobile = await this.showMobileQuickPick();
             selectedFile = `${selectedFile}/${chosenMobile}`;
             await this.runPayloadsByCategory(selectedFile);
-        }else {
+        } else {
             await this.runPayloadsByCategory(selectedFile);
         }
     }
@@ -83,20 +83,20 @@ export class QuickPickController {
         this.showPayloadsForCategory(filteredPayloads);
     }
 
-    public async showMobileQuickPick() : Promise<string>{
+    public async showMobileQuickPick(): Promise<string> {
         return new Promise((resolve) => {
             const categories: PayloadCategoryItem[] = [new PayloadCategoryItem('Android', 0), new PayloadCategoryItem('IOS', 1)]
 
             const quickPick = window.createQuickPick();
             quickPick.items = categories;
             quickPick.placeholder = 'Choose Mobile Type';
-    
+
             quickPick.onDidChangeSelection(selection => {
                 if (selection[0] && selection[0] instanceof PayloadCategoryItem) {
-                   resolve(selection[0].label);
+                    resolve(selection[0].label);
                 }
             })
-    
+
             quickPick.onDidHide(() => quickPick.dispose());
             quickPick.show();
         })
@@ -120,13 +120,11 @@ export class QuickPickController {
                     cancellable: false,
                     title: 'Loading payload'
                 }, async (progress) => {
-        
+
                     progress.report({ increment: 0 });
 
-                    if (selection[0] instanceof PayloadItem) {
-                        await this.choosePayload(selection[0]);
-                    }
-        
+                    await this.choosePayload(selection[0]);
+
                     progress.report({ increment: 100 });
                 });
             }
@@ -136,14 +134,14 @@ export class QuickPickController {
         quickPick.show();
     }
 
-    public async choosePayload(payload: PayloadItem) {
+    public async choosePayload(payload: any) {
         // gets files under the payload directory
         const payloadPath = payload.itemResponse.html_url.split('https://github.com/hak5/usbrubberducky-payloads/tree/master/')[1];
         let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadPath}`;
         const response = await fetch(updatedURL);
         const files = await response.json();
         // TODO: also implement README
-        if(files.length == 0) {
+        if (files.length == 0) {
             window.showErrorMessage("No payloads available");
             return;
         }
@@ -156,17 +154,17 @@ export class QuickPickController {
         }
 
         const folderPath = workspace.workspaceFolders[0]?.uri
-        .toString()
-        .split(':')[1].concat(`/${payload.itemLabel}`);
-        
+            .toString()
+            .split(':')[1].concat(`/${payload.itemLabel}`);
 
-    if (!fs.existsSync(folderPath)) {
-        await fs.mkdir(folderPath, (err: any) => {
-            console.log("error", err)
-        });
-    } else {
-        window.showErrorMessage('Payload already imported!')
-    }
+
+        if (!fs.existsSync(folderPath)) {
+            await fs.mkdir(folderPath, (err: any) => {
+                console.log("error", err)
+            });
+        } else {
+            window.showErrorMessage('Payload already imported!')
+        }
 
         for await (const results of correctPayloadFile) {
             await this.processPayloadFile(results.path, folderPath);
@@ -189,7 +187,7 @@ export class QuickPickController {
 
         var stream = new Readable()
 
-        stream.push(fileBuffer)   
+        stream.push(fileBuffer)
         stream.push(null)
 
         stream.pipe(fs.createWriteStream(path.join(folderPath, payloads2.name)), (err: any) => {
