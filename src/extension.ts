@@ -1,10 +1,12 @@
 import {commands, ExtensionContext, window, workspace} from 'vscode';
+import { CopyLinkController } from './controllers/copyLinkController';
 import { QuickPickController } from './controllers/quickPickController';
 import { ViewsController } from './controllers/viewsController';
 
 export function activate(context: ExtensionContext) {
 	let quickPickController = new QuickPickController(context);
 	let viewsController = new ViewsController();
+	let copyLinkController = new CopyLinkController();
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
 		quickPickController.showQuickPick();

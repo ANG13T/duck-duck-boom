@@ -40,6 +40,10 @@
         {
           "command": "duck-duck-boom.quickInput",
           "group": "ddb@2"
+        },
+        {
+          "command": "duck-duck-boom.views",
+          "group": "ddb@3"
         }
       ],
       "editor/context": [
@@ -52,6 +56,11 @@
           "when": "resourceExtname == .txt",
           "command": "duck-duck-boom.quickInput",
           "group": "ddb@2"
+        },
+        {
+          "when": "resourceExtname == .txt",
+          "command": "duck-duck-boom.views",
+          "group": "ddb@3"
         }
       ]
     }
