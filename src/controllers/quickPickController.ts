@@ -86,8 +86,21 @@ export class QuickPickController {
         quickPick.onDidChangeSelection(selection => {
             if (selection[0] && selection[0] instanceof PayloadItem) {
                 window.showInformationMessage(`Chose ${selection[0].itemLabel} payload!`);
-                console.log("payload is", selection[0]);
-                this.choosePayload(selection[0]);
+
+                window.withProgress({
+                    location: ProgressLocation.Window,
+                    cancellable: false,
+                    title: 'Loading payload'
+                }, async (progress) => {
+        
+                    progress.report({ increment: 0 });
+
+                    if (selection[0] instanceof PayloadItem) {
+                        await this.choosePayload(selection[0]);
+                    }
+        
+                    progress.report({ increment: 100 });
+                });
             }
         })
 
@@ -146,18 +159,7 @@ export class QuickPickController {
     public dispose() { }
 
     public progressLoader() {
-        window.withProgress({
-            location: ProgressLocation.Window,
-            cancellable: false,
-            title: 'Loading payload'
-        }, async (progress) => {
-
-            progress.report({ increment: 0 });
-
-            await Promise.resolve();
-
-            progress.report({ increment: 100 });
-        });
+       
     }
 
 }
