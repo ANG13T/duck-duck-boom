@@ -148,12 +148,28 @@ export class QuickPickController {
             return;
         }
         const correctPayloadFile = files.filter((file: any) => {
-            // TODO: change to general payload name and README then loop over
-            return this.checkPayloadName(file.name);
+            return file.type == "file" && file.name != "placeholder";
         });
 
+        if (!workspace || !workspace.workspaceFolders) {
+            return window.showErrorMessage('Please open a project folder first');
+        }
+
+        const folderPath = workspace.workspaceFolders[0]?.uri
+        .toString()
+        .split(':')[1].concat(`/${payload.itemLabel}`);
+        
+
+    if (!fs.existsSync(folderPath)) {
+        await fs.mkdir(folderPath, (err: any) => {
+            console.log("error", err)
+        });
+    } else {
+        window.showErrorMessage('Payload already imported!')
+    }
+
         for await (const results of correctPayloadFile) {
-            await this.processPayloadFile(results.path, payload.itemLabel);
+            await this.processPayloadFile(results.path, folderPath);
         }
 
     }
@@ -164,27 +180,10 @@ export class QuickPickController {
         return payloadName == "payload.txt" || (payloadName.includes("payload") && fileExt == 'txt') || payloadName == "readme.md";
     }
 
-    public async processPayloadFile(payloadFilePath: string, payloadName: string) {
+    public async processPayloadFile(payloadFilePath: string, folderPath: string) {
         let updatedFinalURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadFilePath}`;
         const response2 = await fetch(updatedFinalURL);
         const payloads2 = await response2.json();
-
-        if (!workspace || !workspace.workspaceFolders) {
-            return window.showErrorMessage('Please open a project folder first');
-        }
-
-        const folderPath = workspace.workspaceFolders[0]?.uri
-            .toString()
-            .split(':')[1].concat(`/${payloadName}`);
-            
-
-        if (!fs.existsSync(folderPath)) {
-            await fs.mkdir(folderPath, (err: any) => {
-                console.log("error", err)
-            });
-        } else {
-            window.showErrorMessage('Payload already imported!')
-        }
 
         const fileBuffer = Buffer.from(payloads2.content, 'base64')
 
