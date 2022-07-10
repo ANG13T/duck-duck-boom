@@ -18,13 +18,22 @@
     "commands": [
       {
         "command": "duck-duck-boom.quickInput",
-        "title": "Quick Input"
+        "title": "Duck Duck Boom: Quick Payload Select"
       },
       {
         "command": "duck-duck-boom.views",
-        "title": "Views"
+        "title": "Duck Duck Boom: Payload Selection"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "resourceExtname == .txt",
+          "command": "duck-duck-boom.quickInput",
+          "group": "ddb@1"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
