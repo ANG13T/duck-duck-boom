@@ -1,4 +1,4 @@
-import { ExtensionContext, QuickPickItemKind, window, QuickPickItem, workspace, commands, Uri, ProgressLocation, FileSystemProvider } from 'vscode';
+import { ExtensionContext, window, QuickPickItem, workspace, ProgressLocation } from 'vscode';
 const fs = require('fs');
 const path = require('path');
 const Readable = require('stream').Readable;
@@ -40,9 +40,11 @@ type PayloadResponse = {
 
 export class QuickPickController {
     private extensionContent: ExtensionContext;
+    private mobileSelection : string;
 
     public constructor(context: ExtensionContext) {
         this.extensionContent = context;
+        this.mobileSelection = "";
     }
 
     public async showQuickPick() {
@@ -64,13 +66,41 @@ export class QuickPickController {
 
     private async retrievePayloadsForCategory(category: PayloadCategoryItem) {
         const files = ['credentials', 'execution', 'exfiltration', 'general', 'incident_response', 'mobile', 'phishing', 'prank', 'recon', 'remote_access'];
-        const selectedFile = files[category.index];
+        let selectedFile = files[category.index];
+        if (selectedFile == 'mobile') {
+            this.showMobileQuickPick().then(async() => {
+                selectedFile = `${selectedFile}/${this.mobileSelection}`;
+                await this.runPayloadsByCategory(selectedFile);
+            })
+        }else {
+            await this.runPayloadsByCategory(selectedFile);
+        }
+    }
+
+    public async runPayloadsByCategory(selectedFile: string) {
         const response = await fetch(`https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/payloads/library/${selectedFile}`);
         const payloads = await response.json() as PayloadResponse[];
         const filteredPayloads = payloads.filter(obj => {
             return obj.name != 'placeholder';
         })
         this.showPayloadsForCategory(filteredPayloads);
+    }
+
+    public async showMobileQuickPick() {
+        const categories: PayloadCategoryItem[] = [new PayloadCategoryItem('Android', 0), new PayloadCategoryItem('IOS', 1)]
+
+        const quickPick = window.createQuickPick();
+        quickPick.items = categories;
+        quickPick.placeholder = 'Choose Mobile Type';
+
+        quickPick.onDidChangeSelection(selection => {
+            if (selection[0] && selection[0] instanceof PayloadCategoryItem) {
+               this.mobileSelection = selection[0].label;
+            }
+        })
+
+        quickPick.onDidHide(() => quickPick.dispose());
+        quickPick.show();
     }
 
     public async showPayloadsForCategory(payloads: PayloadResponse[]) {
@@ -113,11 +143,12 @@ export class QuickPickController {
         let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadPath}`;
         const response = await fetch(updatedURL);
         const files = await response.json();
-        const correctPayloadFile = files.map((file: any) => {
-            if(file.name == "payload.txt") {
-                return file;
-            }
+        console.log("files are", files)
+        // TODO: also implement README
+        const correctPayloadFile = files.filter((file: any) => {
+            return file.name == "payload.txt";
         })
+        console.log("correct are", correctPayloadFile)
         await this.processPayloadFile(correctPayloadFile[0].path, payload.itemLabel);
     }
 
