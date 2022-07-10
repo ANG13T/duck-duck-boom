@@ -10,7 +10,6 @@
     "Other"
   ],
   "activationEvents": [
-    "onFileSystem:memfs",
     "onCommand:duck-duck-boom.helloWorld",
     "onCommand:duck-duck-boom.quickInput"
   ],
@@ -27,9 +26,6 @@
       }
     ]
   },
-  "extensionDependencies": [
-    "mindaro-dev.file-downloader"
-  ],
   "scripts": {
     "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
@@ -54,6 +50,7 @@
   },
   "dependencies": {
     "@microsoft/vscode-file-downloader-api": "^1.0.1",
+    "fs": "^0.0.1-security",
     "node-fetch": "^2.6.7"
   }
 }
