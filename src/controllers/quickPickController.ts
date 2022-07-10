@@ -80,6 +80,7 @@ export class QuickPickController {
         const filteredPayloads = payloads.filter(obj => {
             return obj.name != 'placeholder';
         })
+
         this.showPayloadsForCategory(filteredPayloads);
     }
 
@@ -113,6 +114,12 @@ export class QuickPickController {
 
         quickPick.onDidChangeSelection(selection => {
             if (selection[0] && selection[0] instanceof PayloadItem) {
+                // Include Edge cases
+                if(selection[0].itemLabel == "Ascii") {
+                    this.runPayloadsByCategory("general/Ascii");
+                    return;
+                }
+
                 window.showInformationMessage(`Chose ${selection[0].itemLabel} payload!`);
 
                 window.withProgress({
