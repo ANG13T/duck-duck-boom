@@ -1,4 +1,4 @@
-import { ExtensionContext, QuickPickItemKind, window, QuickPickItem, workspace, commands, Uri,ProgressLocation, FileSystemProvider } from 'vscode';
+import { ExtensionContext, QuickPickItemKind, window, QuickPickItem, workspace, commands, Uri, ProgressLocation, FileSystemProvider } from 'vscode';
 import { showInputBox, showQuickPick } from '../components/QuickPick/basicInput';
 import { multiStepInput } from '../components/QuickPick/multiStepInput';
 import { quickOpen } from '../components/QuickPick/quickOpen';
@@ -10,24 +10,24 @@ import fetch from 'node-fetch';
 
 class PayloadCategoryItem implements QuickPickItem {
     label: string;
-	index: number;
+    index: number;
 
     constructor(public itemLabel: string, public itemIndex: number) {
-		this.label = itemLabel;
+        this.label = itemLabel;
         this.index = itemIndex;
-	}
+    }
 }
 
 class PayloadItem implements QuickPickItem {
     label: string;
-	index: number;
+    index: number;
     response: PayloadResponse;
 
     constructor(public itemLabel: string, public itemIndex: number, public itemResponse: PayloadResponse) {
-		this.label = itemLabel;
+        this.label = itemLabel;
         this.index = itemIndex;
         this.response = itemResponse;
-	}
+    }
 }
 
 type PayloadResponse = {
@@ -43,10 +43,10 @@ type PayloadResponse = {
 
 export class QuickPickController {
     private extensionContent: ExtensionContext;
-    
+
     public constructor(context: ExtensionContext) {
         this.extensionContent = context;
-    }   
+    }
 
     public async showQuickPick() {
         const categories: PayloadCategoryItem[] = [new PayloadCategoryItem('Credentials', 0), new PayloadCategoryItem('Execution', 1), new PayloadCategoryItem('Exfiltration', 2), new PayloadCategoryItem('General', 3), new PayloadCategoryItem('Incident Response', 4), new PayloadCategoryItem('Mobile', 5), new PayloadCategoryItem('Phishing', 6), new PayloadCategoryItem('Prank', 7), new PayloadCategoryItem('Reconnaissance', 8), new PayloadCategoryItem('Remote Access', 9)]
@@ -56,20 +56,20 @@ export class QuickPickController {
         quickPick.placeholder = 'Choose Payload Category';
 
         quickPick.onDidChangeSelection(selection => {
-           if(selection[0] && selection[0] instanceof PayloadCategoryItem) {
-            this.retrievePayloadsForCategory(selection[0]);
-           }
+            if (selection[0] && selection[0] instanceof PayloadCategoryItem) {
+                this.retrievePayloadsForCategory(selection[0]);
+            }
         })
 
         quickPick.onDidHide(() => quickPick.dispose());
-		quickPick.show();     
+        quickPick.show();
     }
 
     private async retrievePayloadsForCategory(category: PayloadCategoryItem) {
         const files = ['credentials', 'execution', 'exfiltration', 'general', 'incident_response', 'mobile', 'phishing', 'prank', 'recon', 'remote_access'];
         const selectedFile = files[category.index];
         const response = await fetch(`https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/payloads/library/${selectedFile}`);
-	    const payloads = await response.json() as PayloadResponse[];
+        const payloads = await response.json() as PayloadResponse[];
         const filteredPayloads = payloads.filter(obj => {
             return obj.name != 'placeholder';
         })
@@ -78,15 +78,15 @@ export class QuickPickController {
 
     public async showPayloadsForCategory(payloads: PayloadResponse[]) {
         console.log(payloads);
-        const payloadItems : PayloadItem[] = payloads.map((payload, index) => {
-           return new PayloadItem(payload.name, index, payload);
+        const payloadItems: PayloadItem[] = payloads.map((payload, index) => {
+            return new PayloadItem(payload.name, index, payload);
         })
         const quickPick = window.createQuickPick();
         quickPick.items = payloadItems;
         quickPick.placeholder = "Choose Payload";
 
         quickPick.onDidChangeSelection(selection => {
-            if(selection[0] && selection[0] instanceof PayloadItem) {
+            if (selection[0] && selection[0] instanceof PayloadItem) {
                 window.showInformationMessage(`Chose ${selection[0].itemLabel} payload!`);
                 console.log("payload is", selection[0]);
                 this.choosePayload(selection[0]);
@@ -94,52 +94,85 @@ export class QuickPickController {
         })
 
         quickPick.onDidHide(() => quickPick.dispose());
-		quickPick.show();   
+        quickPick.show();
     }
 
     public async choosePayload(payload: PayloadItem) {
         console.log("choosing", payload.itemResponse.html_url)
-        const path = payload.itemResponse.html_url.split('https://github.com/hak5/usbrubberducky-payloads/tree/master/')[1];
-        console.log("choosing 2", path)
-        let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${path}`;
+        const payloadPath = payload.itemResponse.html_url.split('https://github.com/hak5/usbrubberducky-payloads/tree/master/')[1];
+        console.log("choosing 2", payloadPath)
+        let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadPath}`;
         const response = await fetch(updatedURL);
-	    const payloads = await response.json();
+        const payloads = await response.json();
         console.log("new", payloads[0].content)
         // const folderUri = Uri.file(`/${payload.itemLabel}`);
         // commands.executeCommand('vscode.openFolder', folderUri);
         console.log("calling", payloads[0]);
-        
+
         let updatedFinalURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloads[0].path}`;
         console.log("choosing 3", updatedFinalURL)
         const response2 = await fetch(updatedFinalURL);
-	    const payloads2 = await response2.json();
+        const payloads2 = await response2.json();
         console.log("jackpot", payloads2.download_url);
         console.log("jackpot2", payloads2.content);
 
-        if (!workspace) {
+        if (!workspace || !workspace.workspaceFolders) {
             return window.showErrorMessage('Please open a project folder first');
         }
 
-        if (!fs.existsSync(`./${payload.itemLabel}`)){
-            fs.mkdirSync(`./${payload.itemLabel}`);
-        }else {
+        const folderPath = workspace.workspaceFolders[0]?.uri
+            .toString()
+            .split(':')[1].concat(`/${payload.itemLabel}`);
+            
+
+        if (!fs.existsSync(`./${payload.itemLabel}`)) {
+            // fs.mkdir(`./${payload.itemLabel}`);
+            await fs.mkdir(folderPath, (err: any) => {
+                console.log("error", err)
+            });
+        } else {
             window.showErrorMessage('Payload already imported!')
         }
+
+        console.log("start file creation", folderPath)
+
+        const htmlContent = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+          <title>Document</title>
+          <link rel="stylesheet" href="app.css" />
+        </head>
+        <body>
+          <script src="app.js"></script>
+        </body>
+        </html>`;
+
+        fs.writeFile(path.join(folderPath, 'index.html'), htmlContent, (err: any) => {
+            if (err) {
+                return window.showErrorMessage(
+                    'Failed to create boilerplate file!'
+                );
+            }
+            window.showInformationMessage('Created boilerplate files');
+        });
     }
 
-    public dispose(){}
+    public dispose() { }
 
-    public progressLoader(){
+    public progressLoader() {
         window.withProgress({
             location: ProgressLocation.Window,
             cancellable: false,
             title: 'Loading customers'
         }, async (progress) => {
-            
-            progress.report({  increment: 0 });
-        
+
+            progress.report({ increment: 0 });
+
             await Promise.resolve();
-        
+
             progress.report({ increment: 100 });
         });
     }
