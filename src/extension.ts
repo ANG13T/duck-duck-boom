@@ -1,10 +1,14 @@
-import {commands, ExtensionContext, window} from 'vscode';
+import {commands, ExtensionContext, window, workspace} from 'vscode';
 import fetch from 'node-fetch';
 import { QuickPickController } from './controllers/quickPickController';
+import { MemFS } from './components/fileSystemProvider';
 
 export function activate(context: ExtensionContext) {
 
-	let quickPickController = new QuickPickController(context);
+	
+	const memFs = new MemFS();
+	context.subscriptions.push(workspace.registerFileSystemProvider('memfs', memFs, { isCaseSensitive: true }));
+	let quickPickController = new QuickPickController(context, memFs);
 
 	let disposable = commands.registerCommand('duck-duck-boom.helloWorld', async() => {
 		window.showInformationMessage('Hello World from Duck Duck Boom!');
