@@ -1,5 +1,4 @@
 import {commands, ExtensionContext, window, workspace} from 'vscode';
-import fetch from 'node-fetch';
 import { QuickPickController } from './controllers/quickPickController';
 import { ViewsController } from './controllers/viewsController';
 

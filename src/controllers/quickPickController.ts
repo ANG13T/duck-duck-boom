@@ -148,9 +148,20 @@ export class QuickPickController {
             return;
         }
         const correctPayloadFile = files.filter((file: any) => {
-            return file.name == "payload.txt";
-        })
-        await this.processPayloadFile(correctPayloadFile[0].path, payload.itemLabel);
+            // TODO: change to general payload name and README then loop over
+            return this.checkPayloadName(file.name);
+        });
+
+        for await (const results of correctPayloadFile) {
+            await this.processPayloadFile(results.path, payload.itemLabel);
+        }
+
+    }
+
+    private checkPayloadName(name: string) {
+        const payloadName = name.toLowerCase();
+        const fileExt = payloadName.split('.').pop();
+        return payloadName == "payload.txt" || (payloadName.includes("payload") && fileExt == 'txt') || payloadName == "readme.md";
     }
 
     public async processPayloadFile(payloadFilePath: string, payloadName: string) {
@@ -167,7 +178,7 @@ export class QuickPickController {
             .split(':')[1].concat(`/${payloadName}`);
             
 
-        if (!fs.existsSync(`./${payloadName}`)) {
+        if (!fs.existsSync(folderPath)) {
             await fs.mkdir(folderPath, (err: any) => {
                 console.log("error", err)
             });
