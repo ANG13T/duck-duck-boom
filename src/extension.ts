@@ -8,6 +8,8 @@ export function activate(context: ExtensionContext) {
 	let viewsController = new ViewsController();
 	let copyLinkController = new CopyLinkController();
 
+	// get all data for payloads (catgeory -> payload name) in beginning and pass data down to controllers
+
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
 		quickPickController.showQuickPick();
 	}));
@@ -17,7 +19,7 @@ export function activate(context: ExtensionContext) {
 	}));
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.copyPayloadLink', async () => {
-		console.log("show views controller")
+		copyLinkController.copyPayloadLink();
 	}));
 }
 

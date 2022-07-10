@@ -4,6 +4,7 @@ const path = require('path');
 const Readable = require('stream').Readable;
 
 import fetch from 'node-fetch';
+import { PayloadResponse } from '../utils/payloadTypes';
 
 class PayloadCategoryItem implements QuickPickItem {
     label: string;
@@ -27,16 +28,6 @@ class PayloadItem implements QuickPickItem {
     }
 }
 
-type PayloadResponse = {
-    name: string;
-    path: string;
-    sha: string;
-    size: number;
-    url: string;
-    html_url: string;
-    git_url: string;
-    type: string;
-}
 
 export class QuickPickController {
     private extensionContent: ExtensionContext;
