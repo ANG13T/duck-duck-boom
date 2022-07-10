@@ -3,7 +3,9 @@ import { showInputBox, showQuickPick } from '../components/QuickPick/basicInput'
 import { multiStepInput } from '../components/QuickPick/multiStepInput';
 import { quickOpen } from '../components/QuickPick/quickOpen';
 import { getApi, FileDownloader } from "@microsoft/vscode-file-downloader-api";
-var fs = require('fs');
+const fs = require('fs');
+const path = require('path');
+
 import fetch from 'node-fetch';
 
 class PayloadCategoryItem implements QuickPickItem {
@@ -113,6 +115,10 @@ export class QuickPickController {
 	    const payloads2 = await response2.json();
         console.log("jackpot", payloads2.download_url);
         console.log("jackpot2", payloads2.content);
+
+        if (!workspace) {
+            return window.showErrorMessage('Please open a project folder first');
+        }
 
         if (!fs.existsSync(`./${payload.itemLabel}`)){
             fs.mkdirSync(`./${payload.itemLabel}`);
