@@ -10,12 +10,18 @@ export async function activate(context: ExtensionContext) {
 	let copyLinkController = new CopyLinkController();
 	let payloadController = new PayloadController();
 
-	console.log("runnung")
-	await payloadController.getPayloadsForCategories().then((result) => {
-		if(result) {
-			console.log("WYAYAY", result)
-		}
-	})
+	let payloads = {
+		'credentials': [],
+		'execution': [], 
+		'exfiltration': [],
+		'general': [], 
+		'incident_response': [], 
+		'mobile': [], 
+		'phishing': [], 
+		'prank': [], 
+		'recon': [], 
+		'remote_access': []
+	}
 
 	// get all data for payloads (catgeory -> payload name) in beginning and pass data down to controllers
 
@@ -28,6 +34,14 @@ export async function activate(context: ExtensionContext) {
 	}));
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.copyPayloadLink', async () => {
+		if (payloads.credentials.length == 0) {
+			await payloadController.getPayloadsForCategories().then((result) => {
+				if(result) {
+					console.log("WYAYAY", result)
+					payloads = result;
+				}
+			})
+		}
 		copyLinkController.copyPayloadLink();
 	}));
 }
