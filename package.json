@@ -10,17 +10,12 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:duck-duck-boom.helloWorld",
     "onCommand:duck-duck-boom.quickInput",
     "onCommand:duck-duck-boom.views"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "duck-duck-boom.helloWorld",
-        "title": "Hello World"
-      },
       {
         "command": "duck-duck-boom.quickInput",
         "title": "Quick Input"

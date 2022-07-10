@@ -7,10 +7,6 @@ export function activate(context: ExtensionContext) {
 	let quickPickController = new QuickPickController(context);
 	let viewsController = new ViewsController();
 
-	let disposable = commands.registerCommand('duck-duck-boom.helloWorld', async() => {
-		window.showInformationMessage('Hello World from Duck Duck Boom!');
-	});
-
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
 		quickPickController.showQuickPick();
 	}));
@@ -18,8 +14,6 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.views', async () => {
 		console.log("show views controller")
 	}));
-
-	context.subscriptions.push(disposable);
 }
 
 export function deactivate() {}
