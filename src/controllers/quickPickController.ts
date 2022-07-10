@@ -158,8 +158,4 @@ export class QuickPickController {
 
     public dispose() { }
 
-    public progressLoader() {
-       
-    }
-
 }

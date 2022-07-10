@@ -49,7 +49,6 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@microsoft/vscode-file-downloader-api": "^1.0.1",
     "fs": "^0.0.1-security",
     "node-fetch": "^2.6.7",
     "path": "^0.12.7",
