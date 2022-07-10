@@ -143,6 +143,10 @@ export class QuickPickController {
         const response = await fetch(updatedURL);
         const files = await response.json();
         // TODO: also implement README
+        if(files.length == 0) {
+            window.showErrorMessage("No payloads available");
+            return;
+        }
         const correctPayloadFile = files.filter((file: any) => {
             return file.name == "payload.txt";
         })
