@@ -1,5 +1,4 @@
 import { ExtensionContext, QuickPickItemKind, window, QuickPickItem, workspace, commands, Uri, ProgressLocation, FileSystemProvider } from 'vscode';
-import { getApi, FileDownloader } from "@microsoft/vscode-file-downloader-api";
 const fs = require('fs');
 const path = require('path');
 const Readable = require('stream').Readable;
@@ -109,16 +108,20 @@ export class QuickPickController {
     }
 
     public async choosePayload(payload: PayloadItem) {
+        // gets files under the payload directory
         const payloadPath = payload.itemResponse.html_url.split('https://github.com/hak5/usbrubberducky-payloads/tree/master/')[1];
         let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadPath}`;
         const response = await fetch(updatedURL);
-        const payloads = await response.json();
+        const files = await response.json();
 
-        let updatedFinalURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloads[0].path}`;
+       await this.processPayloadFile(files[0].path, payload.itemLabel);
+
+    }
+
+    public async processPayloadFile(payloadFilePath: string, payloadName: string) {
+        let updatedFinalURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadFilePath}`;
         const response2 = await fetch(updatedFinalURL);
         const payloads2 = await response2.json();
-        console.log("jackpot", payloads2.download_url);
-        console.log("jackpot2", payloads2.content);
 
         if (!workspace || !workspace.workspaceFolders) {
             return window.showErrorMessage('Please open a project folder first');
@@ -126,18 +129,16 @@ export class QuickPickController {
 
         const folderPath = workspace.workspaceFolders[0]?.uri
             .toString()
-            .split(':')[1].concat(`/${payload.itemLabel}`);
+            .split(':')[1].concat(`/${payloadName}`);
             
 
-        if (!fs.existsSync(`./${payload.itemLabel}`)) {
+        if (!fs.existsSync(`./${payloadName}`)) {
             await fs.mkdir(folderPath, (err: any) => {
                 console.log("error", err)
             });
         } else {
             window.showErrorMessage('Payload already imported!')
         }
-
-        console.log("start file creation", folderPath, payloads2.name)
 
         const fileBuffer = Buffer.from(payloads2.content, 'base64')
 
@@ -153,7 +154,6 @@ export class QuickPickController {
                 );
             }
         });
-
     }
 
     public dispose() { }
