@@ -40,11 +40,9 @@ type PayloadResponse = {
 
 export class QuickPickController {
     private extensionContent: ExtensionContext;
-    private mobileSelection : string;
 
     public constructor(context: ExtensionContext) {
-        this.extensionContent = context;
-        this.mobileSelection = "";
+        this.extensionContent = context;        
     }
 
     public async showQuickPick() {
@@ -67,11 +65,10 @@ export class QuickPickController {
     private async retrievePayloadsForCategory(category: PayloadCategoryItem) {
         const files = ['credentials', 'execution', 'exfiltration', 'general', 'incident_response', 'mobile', 'phishing', 'prank', 'recon', 'remote_access'];
         let selectedFile = files[category.index];
-        if (selectedFile == 'mobile') {
-            this.showMobileQuickPick().then(async() => {
-                selectedFile = `${selectedFile}/${this.mobileSelection}`;
-                await this.runPayloadsByCategory(selectedFile);
-            })
+        if (selectedFile == 'mobile') {            
+            let chosenMobile = await this.showMobileQuickPick();
+            selectedFile = `${selectedFile}/${chosenMobile}`;
+            await this.runPayloadsByCategory(selectedFile);
         }else {
             await this.runPayloadsByCategory(selectedFile);
         }
@@ -86,21 +83,23 @@ export class QuickPickController {
         this.showPayloadsForCategory(filteredPayloads);
     }
 
-    public async showMobileQuickPick() {
-        const categories: PayloadCategoryItem[] = [new PayloadCategoryItem('Android', 0), new PayloadCategoryItem('IOS', 1)]
+    public async showMobileQuickPick() : Promise<string>{
+        return new Promise((resolve) => {
+            const categories: PayloadCategoryItem[] = [new PayloadCategoryItem('Android', 0), new PayloadCategoryItem('IOS', 1)]
 
-        const quickPick = window.createQuickPick();
-        quickPick.items = categories;
-        quickPick.placeholder = 'Choose Mobile Type';
-
-        quickPick.onDidChangeSelection(selection => {
-            if (selection[0] && selection[0] instanceof PayloadCategoryItem) {
-               this.mobileSelection = selection[0].label;
-            }
+            const quickPick = window.createQuickPick();
+            quickPick.items = categories;
+            quickPick.placeholder = 'Choose Mobile Type';
+    
+            quickPick.onDidChangeSelection(selection => {
+                if (selection[0] && selection[0] instanceof PayloadCategoryItem) {
+                   resolve(selection[0].label);
+                }
+            })
+    
+            quickPick.onDidHide(() => quickPick.dispose());
+            quickPick.show();
         })
-
-        quickPick.onDidHide(() => quickPick.dispose());
-        quickPick.show();
     }
 
     public async showPayloadsForCategory(payloads: PayloadResponse[]) {
@@ -143,12 +142,10 @@ export class QuickPickController {
         let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadPath}`;
         const response = await fetch(updatedURL);
         const files = await response.json();
-        console.log("files are", files)
         // TODO: also implement README
         const correctPayloadFile = files.filter((file: any) => {
             return file.name == "payload.txt";
         })
-        console.log("correct are", correctPayloadFile)
         await this.processPayloadFile(correctPayloadFile[0].path, payload.itemLabel);
     }
 
