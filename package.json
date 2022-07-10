@@ -10,6 +10,7 @@
     "Other"
   ],
   "activationEvents": [
+    "onFileSystem:memfs",
     "onCommand:duck-duck-boom.helloWorld",
     "onCommand:duck-duck-boom.quickInput"
   ],

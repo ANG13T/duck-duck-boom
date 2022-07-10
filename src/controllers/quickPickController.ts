@@ -40,10 +40,9 @@ type PayloadResponse = {
 
 export class QuickPickController {
     private extensionContent: ExtensionContext;
-    private memfs: FileSystemProvider;
-    public constructor(context: ExtensionContext, fs: FileSystemProvider) {
+    
+    public constructor(context: ExtensionContext) {
         this.extensionContent = context;
-        this.memfs = fs;
     }   
 
     public async showQuickPick() {
@@ -114,7 +113,7 @@ export class QuickPickController {
         console.log("jackpot", payloads2.download_url);
         console.log("jackpot2", payloads2.content);
 
-        this.memfs.createDirectory(Uri.parse(`memfs:/${payload.itemLabel}/`));
+       
     }
 
     public dispose(){}
