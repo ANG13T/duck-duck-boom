@@ -1,7 +1,4 @@
 import { ExtensionContext, QuickPickItemKind, window, QuickPickItem, workspace, commands, Uri, ProgressLocation, FileSystemProvider } from 'vscode';
-import { showInputBox, showQuickPick } from '../components/QuickPick/basicInput';
-import { multiStepInput } from '../components/QuickPick/multiStepInput';
-import { quickOpen } from '../components/QuickPick/quickOpen';
 import { getApi, FileDownloader } from "@microsoft/vscode-file-downloader-api";
 const fs = require('fs');
 const path = require('path');
