@@ -21,16 +21,14 @@ export async function activate(context: ExtensionContext) {
 		'prank': [], 
 		'recon': [], 
 		'remote_access': []
-	}
-
-	// get all data for payloads (catgeory -> payload name) in beginning and pass data down to controllers
+	}	
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
 		quickPickController.showQuickPick();
 	}));
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.views', async () => {
-		console.log("show views controller")
+		viewsController.showView();
 	}));
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.copyPayloadLink', async () => {
@@ -42,7 +40,7 @@ export async function activate(context: ExtensionContext) {
 				}
 			})
 		}
-		copyLinkController.copyPayloadLink();
+		copyLinkController.copyPayloadLink(payloads);
 	}));
 }
 

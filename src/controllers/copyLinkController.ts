@@ -5,7 +5,7 @@ export class CopyLinkController {
         
     }
 
-    public async copyPayloadLink() {
+    public async copyPayloadLink(payloads: any) {
         const parentDir = path.basename(path.dirname(__filename));
     }
 }
