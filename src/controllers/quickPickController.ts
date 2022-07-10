@@ -113,9 +113,12 @@ export class QuickPickController {
         let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadPath}`;
         const response = await fetch(updatedURL);
         const files = await response.json();
-
-       await this.processPayloadFile(files[0].path, payload.itemLabel);
-
+        const correctPayloadFile = files.map((file: any) => {
+            if(file.name == "payload.txt") {
+                return file;
+            }
+        })
+        await this.processPayloadFile(correctPayloadFile[0].path, payload.itemLabel);
     }
 
     public async processPayloadFile(payloadFilePath: string, payloadName: string) {
