@@ -13,6 +13,10 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.views', async () => {
 		console.log("show views controller")
 	}));
+
+	context.subscriptions.push(commands.registerCommand('duck-duck-boom.copyPayloadLink', async () => {
+		console.log("show views controller")
+	}));
 }
 
 export function deactivate() {}
