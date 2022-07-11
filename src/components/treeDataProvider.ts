@@ -6,16 +6,22 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
   data: TreeItem[];
 
   constructor(payloads: any) {
-    let payloadArray = [];
-    for (var category in payloads) {
-      let valueProp: any = category;
-      console.log("valueProp is", category);
-      if (Object.prototype.hasOwnProperty.call(payloads, category)) {
-        payloadArray.push(new TreeItem(category, payloads[category]))
-      }
+    let payloadArray: TreeItem[] | undefined = [];
+    const categories = ['credentials', 'execution', 'exfiltration', 'general', 'incident_response', 'mobile', 'phishing', 'prank', 'recon', 'remote_access'];
+    for(let category of categories) {
+      payloadArray.push(new TreeItem(category, this.getPayloadsOfCategory(category, payloads)))
     }
-    console.log("payload arary", payloadArray)
     this.data = [new TreeItem('Payloads', payloadArray)];
+  }
+
+  getPayloadsOfCategory(category: string, payloads: any){
+    let finalArray = [];
+    let selectedPayloads = payloads[category];
+    console.log("SELECTED: ", category, payloads)
+    for(let payload of selectedPayloads) {
+      finalArray.push(new TreeItem(payload.name, [], payload))
+    }
+    return finalArray;
   }
 
   getTreeItem(element: TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
@@ -32,12 +38,14 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
 class TreeItem extends vscode.TreeItem {
   children: TreeItem[] | undefined;
+  metadata: any | undefined;
 
-  constructor(label: string, children?: TreeItem[]) {
+  constructor(label: string, children?: TreeItem[], metadata?: any) {
     super(
       label,
       children === undefined ? vscode.TreeItemCollapsibleState.None :
         vscode.TreeItemCollapsibleState.Expanded);
     this.children = children;
+    this.metadata = metadata;
   }
 }
