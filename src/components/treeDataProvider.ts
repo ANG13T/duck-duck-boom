@@ -11,9 +11,7 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
       let valueProp: any = category;
       console.log("valueProp is", category);
       if (Object.prototype.hasOwnProperty.call(payloads, category)) {
-        for (var values in valueProp) {
-          payloadArray.push(new TreeItem(category, payloads[category]))
-        }
+        payloadArray.push(new TreeItem(category, payloads[category]))
       }
     }
     console.log("payload arary", payloadArray)
