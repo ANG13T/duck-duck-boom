@@ -143,17 +143,22 @@ export class QuickPickController {
             window.showErrorMessage("No payloads available");
             return;
         }
-        const correctPayloadFile = files.filter((file: any) => {
+        const correctPayloadFiles = files.filter((file: any) => {
             return file.type == "file" && file.name != "placeholder";
-        });
+        }); 
 
+        await this.createPayloadDirectory(payload.itemLabel, correctPayloadFiles)
+
+    }
+
+    public async createPayloadDirectory(payloadName: string, payloadFiles: any[]) {
         if (!workspace || !workspace.workspaceFolders) {
             return window.showErrorMessage('Please open a project folder first');
         }
 
         const folderPath = workspace.workspaceFolders[0]?.uri
             .toString()
-            .split(':')[1].concat(`/${payload.itemLabel}`);
+            .split(':')[1].concat(`/${payloadName}`);
 
 
         if (!fs.existsSync(folderPath)) {
@@ -164,16 +169,9 @@ export class QuickPickController {
             window.showErrorMessage('Payload already imported!')
         }
 
-        for await (const results of correctPayloadFile) {
+        for await (const results of payloadFiles) {
             await this.processPayloadFile(results.path, folderPath);
         }
-
-    }
-
-    private checkPayloadName(name: string) {
-        const payloadName = name.toLowerCase();
-        const fileExt = payloadName.split('.').pop();
-        return payloadName == "payload.txt" || (payloadName.includes("payload") && fileExt == 'txt') || payloadName == "readme.md";
     }
 
     public async processPayloadFile(payloadFilePath: string, folderPath: string) {

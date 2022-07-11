@@ -14,12 +14,13 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
     this.data = [new TreeItem('Payloads', payloadArray)];
   }
 
+  // TODO: take care of Mobile edge case
   getPayloadsOfCategory(category: string, payloads: any){
     let finalArray = [];
     let selectedPayloads = payloads[category];
     console.log("SELECTED: ", category, payloads)
     for(let payload of selectedPayloads) {
-      finalArray.push(new TreeItem(payload.name, [], payload))
+      finalArray.push(new TreeItem(payload.name, undefined, payload))
     }
     return finalArray;
   }
@@ -39,6 +40,10 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 class TreeItem extends vscode.TreeItem {
   children: TreeItem[] | undefined;
   metadata: any | undefined;
+  command = {
+    "title": "Show error",
+    "command": "test.view.showError",
+  }
 
   constructor(label: string, children?: TreeItem[], metadata?: any) {
     super(
