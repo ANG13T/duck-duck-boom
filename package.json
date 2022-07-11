@@ -12,7 +12,8 @@
   "activationEvents": [
     "onCommand:duck-duck-boom.quickInput",
     "onCommand:duck-duck-boom.views",
-    "onCommand:duck-duck-boom.copyPayloadLink"
+    "onCommand:duck-duck-boom.copyPayloadLink",
+    "onView:exampleView"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -63,7 +64,15 @@
           "group": "ddb@3"
         }
       ]
-    }
+    },
+      "views" : {
+        "explorer": [
+          {
+              "id": "exampleView",
+              "name": "exampleView"
+          }
+      ]
+      }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",

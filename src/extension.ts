@@ -1,5 +1,5 @@
 import {commands, ExtensionContext, window, workspace} from 'vscode';
-import { CopyLinkController } from './controllers/copyLinkController';
+import { CopyLinkController, TreeDataProvider } from './controllers/copyLinkController';
 import { PayloadController } from './controllers/payloadController';
 import { QuickPickController } from './controllers/quickPickController';
 import { ViewsController } from './controllers/viewsController';
@@ -22,6 +22,8 @@ export async function activate(context: ExtensionContext) {
 		'recon': [], 
 		'remote_access': []
 	}	
+
+	window.registerTreeDataProvider('exampleView', new TreeDataProvider());
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
 		quickPickController.showQuickPick();
