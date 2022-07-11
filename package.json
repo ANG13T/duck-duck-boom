@@ -11,7 +11,6 @@
   ],
   "activationEvents": [
     "onCommand:duck-duck-boom.quickInput",
-    "onCommand:duck-duck-boom.views",
     "onCommand:duck-duck-boom.copyPayloadLink",
     "onView:exampleView"
   ],
@@ -21,10 +20,6 @@
       {
         "command": "duck-duck-boom.quickInput",
         "title": "Duck Duck Boom: Quick Payload Select"
-      },
-      {
-        "command": "duck-duck-boom.views",
-        "title": "Duck Duck Boom: Payload Selection"
       },
       {
         "command": "duck-duck-boom.copyPayloadLink",
@@ -41,10 +36,6 @@
         {
           "command": "duck-duck-boom.quickInput",
           "group": "ddb@2"
-        },
-        {
-          "command": "duck-duck-boom.views",
-          "group": "ddb@3"
         }
       ],
       "editor/context": [
@@ -57,11 +48,6 @@
           "when": "resourceExtname == .txt",
           "command": "duck-duck-boom.quickInput",
           "group": "ddb@2"
-        },
-        {
-          "when": "resourceExtname == .txt",
-          "command": "duck-duck-boom.views",
-          "group": "ddb@3"
         }
       ]
     },
