@@ -11,7 +11,6 @@
   ],
   "activationEvents": [
     "onCommand:duck-duck-boom.quickInput",
-    "onCommand:duck-duck-boom.copyPayloadLink",
     "onView:payloadView"
   ],
   "main": "./out/extension.js",
@@ -20,30 +19,16 @@
       {
         "command": "duck-duck-boom.quickInput",
         "title": "Duck Duck Boom: Quick Payload Select"
-      },
-      {
-        "command": "duck-duck-boom.copyPayloadLink",
-        "title": "Duck Duck Boom: Copy Payload URL"
       }
     ],
     "menus": {
       "explorer/context": [
-        {
-          "when": "resourceExtname == .txt",
-          "command": "duck-duck-boom.copyPayloadLink",
-          "group": "ddb@1"
-        },
         {
           "command": "duck-duck-boom.quickInput",
           "group": "ddb@2"
         }
       ],
       "editor/context": [
-        {
-          "when": "resourceExtname == .txt",
-          "command": "duck-duck-boom.copyPayloadLink",
-          "group": "ddb@1"
-        },
         {
           "when": "resourceExtname == .txt",
           "command": "duck-duck-boom.quickInput",
