@@ -12,7 +12,7 @@
   "activationEvents": [
     "onCommand:duck-duck-boom.quickInput",
     "onCommand:duck-duck-boom.copyPayloadLink",
-    "onView:exampleView"
+    "onView:payloadView"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -54,8 +54,8 @@
       "views" : {
         "explorer": [
           {
-              "id": "exampleView",
-              "name": "exampleView"
+              "id": "payloadView",
+              "name": "Duck Duck Boom Payloads"
           }
       ]
       }

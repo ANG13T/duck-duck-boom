@@ -5,8 +5,18 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
   
     data: TreeItem[];
   
-    constructor() {
-      this.data = [new TreeItem('cars', [
+    constructor(payloads: any) {
+      for (var prop in payloads) {
+        let valueProp : any = prop;
+        console.log("valueProp is", prop);
+        // let payloadArray = [];
+        // if (Object.prototype.hasOwnProperty.call(payloads, prop)) {
+        //     for (var values in valueProp) {
+        //       payloadArray.push(new TreeItem(prop))
+        //     }
+        // }
+    }
+      this.data = [new TreeItem('Payloads', [
         new TreeItem(
             'Ford', [new TreeItem('Fiesta'), new TreeItem('Focus'), new TreeItem('Mustang')]),
         new TreeItem(
