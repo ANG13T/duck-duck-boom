@@ -1,12 +1,11 @@
 import {commands, ExtensionContext, window, workspace} from 'vscode';
-import { CopyLinkController, TreeDataProvider } from './controllers/copyLinkController';
+import { TreeDataProvider } from './components/treeDataProvider';
+import { CopyLinkController } from './controllers/copyLinkController';
 import { PayloadController } from './controllers/payloadController';
 import { QuickPickController } from './controllers/quickPickController';
-import { ViewsController } from './controllers/viewsController';
 
 export async function activate(context: ExtensionContext) {
 	let quickPickController = new QuickPickController(context);
-	let viewsController = new ViewsController();
 	let copyLinkController = new CopyLinkController();
 	let payloadController = new PayloadController();
 
@@ -27,10 +26,6 @@ export async function activate(context: ExtensionContext) {
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
 		quickPickController.showQuickPick();
-	}));
-
-	context.subscriptions.push(commands.registerCommand('duck-duck-boom.views', async () => {
-		viewsController.showView();
 	}));
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.copyPayloadLink', async () => {
