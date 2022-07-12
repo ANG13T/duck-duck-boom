@@ -24,12 +24,11 @@ export async function activate(context: ExtensionContext) {
 		await payloadController.getPayloadsForCategories().then((result) => {
 			if(result) {
 				payloads = result;
-				console.log("payloads now", payloads)
+				console.log("payloads now", payloads);
+				window.registerTreeDataProvider('payloadView', new TreeDataProvider(payloads));
 			}
 		})
 	}
-
-	window.registerTreeDataProvider('payloadView', new TreeDataProvider(payloads));
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
 		quickPickController.showQuickPick();
