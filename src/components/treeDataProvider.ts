@@ -40,10 +40,7 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
 class TreeItem extends vscode.TreeItem {
   children: TreeItem[] | undefined;
   metadata: any | undefined;
-  command = {
-    "title": "Show error",
-    "command": "test.view.showError",
-  }
+  command: vscode.Command | undefined;
 
   constructor(label: string, children?: TreeItem[], metadata?: any) {
     super(
@@ -52,5 +49,10 @@ class TreeItem extends vscode.TreeItem {
         vscode.TreeItemCollapsibleState.Expanded);
     this.children = children;
     this.metadata = metadata;
+    this.command = {
+      "title": "Show error",
+      "command": "test.view.showError",
+      "arguments": [this.metadata]
+    }
   }
 }
