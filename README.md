@@ -8,9 +8,7 @@
   <h3 align="center">Duck Duck Boom</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Learn more »</strong></a>
+    A VS Code Extension to import USB Rubber Ducky payloads quickly!
     <br />
     <br />
   </p>
