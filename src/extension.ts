@@ -36,7 +36,8 @@ export async function activate(context: ExtensionContext) {
 	}));
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.showPayload', async (payloadMetadata: any) => {
-		console.log("show data", payloadMetadata)
+		console.log("show data", payloadMetadata);
+		await payloadController.choosePayload(payloadMetadata);
 	}));
 }
 

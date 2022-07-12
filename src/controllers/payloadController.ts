@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import { PayloadResponse } from '../utils/payloadTypes';
-import { ExtensionContext, window, QuickPickItem, workspace, ProgressLocation } from 'vscode';
+import { window, workspace, ProgressLocation } from 'vscode';
 const fs = require('fs');
 const path = require('path');
 const Readable = require('stream').Readable;
@@ -83,7 +83,7 @@ export class PayloadController {
 
     public async choosePayloadFile(payload: any) {
         // gets files under the payload directory
-        const payloadPath = payload.itemResponse.html_url.split('https://github.com/hak5/usbrubberducky-payloads/tree/master/')[1];
+        const payloadPath = payload.html_url.split('https://github.com/hak5/usbrubberducky-payloads/tree/master/')[1];
         let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadPath}`;
         const response = await fetch(updatedURL);
         const files = await response.json();
@@ -96,7 +96,7 @@ export class PayloadController {
             return file.type == "file" && file.name != "placeholder";
         }); 
 
-        await this.createPayloadDirectory(payload.itemLabel, correctPayloadFiles)
+        await this.createPayloadDirectory(payload.name, correctPayloadFiles)
 
     }
 
