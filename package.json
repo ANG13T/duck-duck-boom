@@ -7,7 +7,19 @@
     "vscode": "^1.68.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Extension Packs",
+    "Programming Languages"
+  ],
+  "author": {
+    "name": "Angelina Tsuboi"
+  },
+  "keywords": [
+    "Cybersecurity",
+    "USB Rubber Ducky",
+    "Payload",
+    "Hak5 Payloads",
+    "Hacking"
   ],
   "activationEvents": [
     "onCommand:duck-duck-boom.quickInput",
