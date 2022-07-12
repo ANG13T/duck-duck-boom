@@ -25,7 +25,9 @@ export async function activate(context: ExtensionContext) {
 			if(result) {
 				payloads = result;
 				console.log("payloads now", payloads);
-				window.registerTreeDataProvider('payloadView', new TreeDataProvider(payloads));
+				if(payloads['credentials'].length > 0) {
+					window.registerTreeDataProvider('payloadView', new TreeDataProvider(payloads));
+				}
 			}
 		})
 	}

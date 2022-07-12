@@ -15,9 +15,9 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
   }
 
   getPayloadsOfCategory(category: string, payloads: any){
-    let finalArray = [];
-    console.log("print", category, payloads)
+    let finalArray = []; 
     let selectedPayloads = payloads[category];
+    console.log("print", selectedPayloads)
     for(let payload of selectedPayloads) {
       finalArray.push(new TreeItem(payload.name, undefined, payload))
     }
