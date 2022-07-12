@@ -95,7 +95,6 @@ export class QuickPickController {
     }
 
     public async showPayloadsForCategory(payloads: PayloadResponse[]) {
-        console.log(payloads);
         const payloadItems: PayloadItem[] = payloads.map((payload, index) => {
             return new PayloadItem(payload.name, index, payload);
         })
@@ -138,7 +137,7 @@ export class QuickPickController {
         let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadPath}`;
         const response = await fetch(updatedURL);
         const files = await response.json();
-        // TODO: also implement README
+        
         if (files.length == 0) {
             window.showErrorMessage("No payloads available");
             return;

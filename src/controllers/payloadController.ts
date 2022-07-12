@@ -87,7 +87,7 @@ export class PayloadController {
         let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadPath}`;
         const response = await fetch(updatedURL);
         const files = await response.json();
-        // TODO: also implement README
+        
         if (files.length == 0) {
             window.showErrorMessage("No payloads available");
             return;

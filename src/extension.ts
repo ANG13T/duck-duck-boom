@@ -1,4 +1,4 @@
-import {commands, ExtensionContext, window, workspace} from 'vscode';
+import {commands, ExtensionContext, window} from 'vscode';
 import { TreeDataProvider } from './components/treeDataProvider';
 import { PayloadController } from './controllers/payloadController';
 import { QuickPickController } from './controllers/quickPickController';
@@ -35,8 +35,7 @@ export async function activate(context: ExtensionContext) {
 		quickPickController.showQuickPick();
 	}));
 
-	context.subscriptions.push(commands.registerCommand('duck-duck-boom.showPayload', async (payloadMetadata: any) => {
-		console.log("show data", payloadMetadata);
+	context.subscriptions.push(commands.registerCommand('duck-duck-boom.showPayload', async (payloadMetadata: any) => {	
 		await payloadController.choosePayload(payloadMetadata);
 	}));
 }

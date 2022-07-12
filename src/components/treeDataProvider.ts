@@ -14,7 +14,6 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {
     this.data = [new TreeItem('Payloads', payloadArray)];
   }
 
-  // TODO: take care of Mobile edge case
   getPayloadsOfCategory(category: string, payloads: any){
     let finalArray = [];
     let selectedPayloads = payloads[category];
