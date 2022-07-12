@@ -34,6 +34,10 @@ export async function activate(context: ExtensionContext) {
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
 		quickPickController.showQuickPick();
 	}));
+
+	context.subscriptions.push(commands.registerCommand('duck-duck-boom.showPayload', async (payloadMetadata: any) => {
+		console.log("show data", payloadMetadata)
+	}));
 }
 
 export function deactivate() {}

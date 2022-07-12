@@ -11,7 +11,8 @@
   ],
   "activationEvents": [
     "onCommand:duck-duck-boom.quickInput",
-    "onView:payloadView"
+    "onView:payloadView",
+    "onCommand:duck-duck-boom.showPayload"
   ],
   "main": "./out/extension.js",
   "contributes": {

@@ -50,8 +50,8 @@ class TreeItem extends vscode.TreeItem {
     this.children = children;
     this.metadata = metadata;
     this.command = {
-      "title": "Show error",
-      "command": "test.view.showError",
+      "title": "Show Payload",
+      "command": "duck-duck-boom.showPayload",
       "arguments": [this.metadata]
     }
   }
