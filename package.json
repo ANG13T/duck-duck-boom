@@ -3,6 +3,7 @@
   "displayName": "Duck Duck Boom",
   "description": "Duck Duck Boom - import USB Rubber Ducky payloads quickly.",
   "version": "0.0.1",
+  "publisher": "AngelinaTsuboi",
   "engines": {
     "vscode": "^1.68.0"
   },
