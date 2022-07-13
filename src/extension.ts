@@ -3,17 +3,6 @@ import { TreeDataProvider } from './components/treeDataProvider';
 import { PayloadController } from './controllers/payloadController';
 import { QuickPickController } from './controllers/quickPickController';
 
-function testAsync(){
-    return new Promise((resolve,reject)=>{
-        //here our function should be implemented 
-        setTimeout(()=>{
-            console.log("Hello from inside the testAsync function");
-            resolve(null);
-        ;} , 5000
-        );
-    });
-}
-
 export async function activate(context: ExtensionContext) {
 	let quickPickController = new QuickPickController(context);
 	let payloadController = new PayloadController();
