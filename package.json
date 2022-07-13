@@ -72,6 +72,11 @@
     "mocha": "^10.0.0",
     "typescript": "^4.7.4"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angelina-tsuboi/duck-duck-boom"
+  },
+  "homepage": "https://github.com/angelina-tsuboi/duck-duck-boom",
   "dependencies": {
     "fs": "^0.0.1-security",
     "node-fetch": "^2.6.7",
