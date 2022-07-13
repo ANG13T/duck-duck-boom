@@ -3,6 +3,17 @@ import { TreeDataProvider } from './components/treeDataProvider';
 import { PayloadController } from './controllers/payloadController';
 import { QuickPickController } from './controllers/quickPickController';
 
+function testAsync(){
+    return new Promise((resolve,reject)=>{
+        //here our function should be implemented 
+        setTimeout(()=>{
+            console.log("Hello from inside the testAsync function");
+            resolve(null);
+        ;} , 5000
+        );
+    });
+}
+
 export async function activate(context: ExtensionContext) {
 	let quickPickController = new QuickPickController(context);
 	let payloadController = new PayloadController();
@@ -20,17 +31,20 @@ export async function activate(context: ExtensionContext) {
 		'remote_access': []
 	}	
 
-	if (payloads['credentials'].length == 0) {
-		await payloadController.getPayloadsForCategories().then((result) => {
-			if(result) {
-				payloads = result;
-				console.log("payloads now", payloads);
-				if(payloads['credentials'].length > 0) {
-					window.registerTreeDataProvider('payloadView', new TreeDataProvider(payloads));
-				}
-			}
-		})
-	}
+	// TODO: work in progress
+	// if (payloads['credentials'].length == 0) {
+	// 	payloadController.getPayloadsForCategories().then((result) => {
+	// 		if(result) {
+	// 			payloads = result;
+	// 			console.log("payloads now", payloads, payloads['credentials']);
+	// 			if(payloads['credentials'] && payloads['credentials'].length > 0) {
+	// 				window.registerTreeDataProvider('payloadView', new TreeDataProvider(payloads));
+	// 			}
+	// 		}
+	// 	}).then(undefined, err => {
+	// 		console.error('I am error', err);
+	// 	 })
+	// }
 
 	context.subscriptions.push(commands.registerCommand('duck-duck-boom.quickInput', async () => {
 		quickPickController.showQuickPick();

@@ -8,62 +8,62 @@ const Readable = require('stream').Readable;
 export class PayloadController {
     private payloads: any = {
         'credentials': [],
-        'execution': [], 
+        'execution': [],
         'exfiltration': [],
-        'general': [], 
-        'incident_response': [], 
-        'mobile': [], 
-        'phishing': [], 
-        'prank': [], 
-        'recon': [], 
+        'general': [],
+        'incident_response': [],
+        'mobile': [],
+        'phishing': [],
+        'prank': [],
+        'recon': [],
         'remote_access': []
     }
     constructor() {
         this.payloads = {
             'credentials': [],
-            'execution': [], 
+            'execution': [],
             'exfiltration': [],
-            'general': [], 
-            'incident_response': [], 
-            'mobile': [], 
-            'phishing': [], 
-            'prank': [], 
-            'recon': [], 
+            'general': [],
+            'incident_response': [],
+            'mobile': [],
+            'phishing': [],
+            'prank': [],
+            'recon': [],
             'remote_access': []
         }
     }
 
-    public async getPayloadsForCategories() : Promise<any>{
-        return new Promise(async(resolve) => {
-            const files = ['credentials', 'execution', 'exfiltration', 'general', 'incident_response', 'mobile', 'phishing', 'prank', 'recon', 'remote_access'];
-            await files.forEach(async(file) => {
+    public async getPayloadsForCategories(): Promise<any> {
+        const files = ['credentials', 'execution', 'exfiltration', 'general', 'incident_response', 'mobile', 'phishing', 'prank', 'recon', 'remote_access'];
+        return Promise.all(
 
-                if (file == 'mobile') {
-                    let IOSPayloads = await this.runPayloadsByCategory(`${file}/iOS`);
-                    let AndroidPayloads = await this.runPayloadsByCategory(`${file}/Android`);
-                    this.payloads[file] = [...IOSPayloads, ...AndroidPayloads];
-                }else {
-                    
-                    if(file == 'general') {
-                        this.payloads[file].forEach(async(payFile: any, index: number) => {
-                            if(payFile.name == "Ascii") {
-                                let asciiResult = await this.runPayloadsByCategory(`${file}/Ascii`);
-                                this.payloads[file][index] = asciiResult[0];
-                            }
-                        })
-                    }else{
-                        this.payloads[file] = await this.runPayloadsByCategory(file);
+            await files.map(async (file) => {
+                return new Promise(async(resolve) => {
 
-                        if(this.checkPromiseComplete(this.payloads)) {
-                            console.log("resolving", this.payloads['credentials'].length, this.payloads);
-                            resolve(this.payloads);
+                    if (file == 'mobile') {
+                        let IOSPayloads = await this.runPayloadsByCategory(`${file}/iOS`);
+                        let AndroidPayloads = await this.runPayloadsByCategory(`${file}/Android`);
+                        this.payloads[file] = [...IOSPayloads, ...AndroidPayloads];
+                        resolve(this.payloads[file]);
+                    } else {
+
+                        if (file == 'general') {
+                            await this.payloads[file].forEach(async (payFile: any, index: number) => {
+                                if (payFile.name == "Ascii") {
+                                    let asciiResult = await this.runPayloadsByCategory(`${file}/Ascii`);
+                                    this.payloads[file][index] = asciiResult[0];
+                                }
+                            });
+                            resolve(this.payloads[file]);
+                        } else {
+                            this.payloads[file] = await this.runPayloadsByCategory(file);
+                            resolve(this.payloads[file]);
                         }
                     }
-                }
-                
-                
-            });
-        })
+                })
+
+            })
+        );
     }
 
     public checkPromiseComplete(payloads: any[]) {
@@ -72,7 +72,7 @@ export class PayloadController {
         let result = true;
         for (let file in files) {
             console.log("c: ", file, payloads[file]);
-            if(!payloads[file] || payloads[file].length == 0){
+            if (!payloads[file] || payloads[file].length == 0) {
                 result = false;
             }
         }
@@ -83,7 +83,7 @@ export class PayloadController {
     public async runPayloadsByCategory(selectedFile: string) {
         const response = await fetch(`https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/payloads/library/${selectedFile}`);
         const payloads = await response.json() as PayloadResponse[];
-        if(!payloads) return [];
+        if (!payloads) return [];
         const filteredPayloads = payloads.filter(obj => {
             return obj.name != 'placeholder';
         })
@@ -105,7 +105,7 @@ export class PayloadController {
 
             progress.report({ increment: 100 });
         });
-        
+
     }
 
     public async choosePayloadFile(payload: any) {
@@ -114,14 +114,14 @@ export class PayloadController {
         let updatedURL = `https://api.github.com/repos/hak5/usbrubberducky-payloads/contents/${payloadPath}`;
         const response = await fetch(updatedURL);
         const files = await response.json();
-        
+
         if (files.length == 0) {
             window.showErrorMessage("No payloads available");
             return;
         }
         const correctPayloadFiles = files.filter((file: any) => {
             return file.type == "file" && file.name != "placeholder";
-        }); 
+        });
 
         await this.createPayloadDirectory(payload.name, correctPayloadFiles)
 

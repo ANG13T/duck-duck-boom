@@ -24,7 +24,6 @@
   ],
   "activationEvents": [
     "onCommand:duck-duck-boom.quickInput",
-    "onView:payloadView",
     "onCommand:duck-duck-boom.showPayload"
   ],
   "main": "./out/extension.js",
@@ -49,15 +48,7 @@
           "group": "ddb@2"
         }
       ]
-    },
-      "views" : {
-        "explorer": [
-          {
-              "id": "payloadView",
-              "name": "Duck Duck Boom Payloads"
-          }
-      ]
-      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
