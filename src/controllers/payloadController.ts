@@ -43,8 +43,7 @@ export class PayloadController {
                     let AndroidPayloads = await this.runPayloadsByCategory(`${file}/Android`);
                     this.payloads[file] = [...IOSPayloads, ...AndroidPayloads];
                 }else {
-                    this.payloads[file] = await this.runPayloadsByCategory(file);
-
+                    
                     if(file == 'general') {
                         this.payloads[file].forEach(async(payFile: any, index: number) => {
                             if(payFile.name == "Ascii") {
@@ -52,13 +51,17 @@ export class PayloadController {
                                 this.payloads[file][index] = asciiResult[0];
                             }
                         })
+                    }else{
+                        this.payloads[file] = await this.runPayloadsByCategory(file);
+
+                        if(this.checkPromiseComplete(this.payloads)) {
+                            console.log("resolving", this.payloads['credentials'].length, this.payloads);
+                            resolve(this.payloads);
+                        }
                     }
                 }
                 
-                if(this.checkPromiseComplete(this.payloads)) {
-                    console.log("resolving", this.payloads['credentials'].length, this.payloads);
-                    resolve(this.payloads);
-                }
+                
             });
         })
     }
@@ -68,10 +71,12 @@ export class PayloadController {
         const files = ['credentials', 'execution', 'exfiltration', 'general', 'incident_response', 'mobile', 'phishing', 'prank', 'recon', 'remote_access'];
         let result = true;
         for (let file in files) {
-            if(payloads[file].length == 0){
+            console.log("c: ", file, payloads[file]);
+            if(!payloads[file] || payloads[file].length == 0){
                 result = false;
             }
         }
+        console.log("result is ", result)
         return result;
     }
 
