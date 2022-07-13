@@ -35,5 +35,13 @@ The USB Rubber Ducky is a flash drive that can type keystroke injection payloads
 Payloads for the USB Rubber Ducky are written with a language called Ducky Script. Payloads for the USB Rubber Ducky are sorted into 10 categories (credentials, execution, exfiltration, general, incident response, mobile, phishing, prank, recon, and remote_access). On Duck Duck Boom, the **Quick Select** command lets you view payloads under all of those categories.
 
 ## Project Structure
+`src/extension.ts`: registers commands with VS Code and makes API calls to retrieve all payloads (WIP: API call to retrieve all payloads)
+`src/controllers/quickPickController.ts`: contains Quick Select component functionality. Displays payload categories, and makes respective API calls
+`src/controllers/payloadController.ts`: contains API functions to retrieve all payloads under the Hak5 USB Rubber Ducky repository
+`src/components/treeDataProvider.ts`: contains code to open up a view panel and display all payloads under a TreeView provider (WIP)
+`src/utils/payloadTypes.ts`: contains TypeScript types for API payload responses
 
 ## Upcoming Features
+Currently, Duck Duck Boom is in beta mode which contains a Quick Select payload option. Future features of Duck Duck Boom include:
+
+If you would like to contribute to this repository, feel free to fork it and submit a pull request with the implemented features.
