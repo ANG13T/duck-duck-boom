@@ -1,7 +1,9 @@
 <div id="top"></div>
 <br />
 <div align="center">
-  ![Logo](https://github.com/angelina-tsuboi/duck-duck-boom/blob/main/media/logo.png)
+  <a href="https://github.com/angelina-tsuboi/duck-duck-boom">
+    <img src="https://github.com/angelina-tsuboi/duck-duck-boom/blob/main/media/logo.png" alt="Logo">
+  </a>
 
   <h3 align="center">Duck Duck Boom</h3>
 
