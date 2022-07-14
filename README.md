@@ -1,9 +1,7 @@
 <div id="top"></div>
 <br />
 <div align="center">
-  <a href="https://github.com/angelina-tsuboi/duck-duck-boom">
-    <img src="https://github.com/angelina-tsuboi/duck-duck-boom/blob/main/media/logo.png" alt="Logo">
-  </a>
+    <img src="https://github.com/angelina-tsuboi/duck-duck-boom/blob/main/media/logo.png" alt="Logo" width="200" height="200">
 
   <h3 align="center">Duck Duck Boom</h3>
 
@@ -11,12 +9,14 @@
     A VS Code Extension to import USB Rubber Ducky payloads quickly!
     <br />
     <br />
-   <a href="https://marketplace.visualstudio.com/items?itemName=AngelinaTsuboi.duck-duck-boom"><strong>Install for VS Code »</strong></a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=AngelinaTsuboi.duck-duck-boom"><strong>Install for VS Code »</strong></a>
   </p>
 </div>
 
 ## About The Project
-![Preview](https://github.com/angelina-tsuboi/duck-duck-boom/blob/main/media/preview.gif)
+<div align="center">
+<img src="https://github.com/angelina-tsuboi/duck-duck-boom/blob/main/media/preview.gif" alt="Preview" width="800" height="450">
+</div>
 <br />
 Duck Duck Boom is a VS Code Extension to import USB Rubber Ducky keystroke injection payloads quickly! 
 
