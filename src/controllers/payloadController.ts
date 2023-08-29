@@ -132,8 +132,7 @@ export class PayloadController {
             return window.showErrorMessage('Please open a project folder first');
         }
 
-        const folderPath = workspace.workspaceFolders[0]?.uri
-            .toString()
+        const folderPath = workspace.workspaceFolders[0]?.uri.fsPath
             .split(':')[1].concat(`/${payloadName}`);
 
 
